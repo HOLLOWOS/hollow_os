@@ -1,6 +1,7 @@
 import { wifi } from "./actions/wifi";
 import { disk } from "./actions/disk";
 import { install } from "./actions/install";
+import { update } from "./actions/update";
 
 type Message = {
   id: string;
@@ -10,11 +11,15 @@ type Message = {
 
 async function dispatch(msg: Message): Promise<any> {
   switch (msg.action) {
-    case "wifi.scan":      return wifi.scan();
-    case "wifi.connect":   return wifi.connect(msg.payload);
-    case "disk.list":      return disk.list();
-    case "disk.partition": return disk.partition(msg.payload);
-    case "install.start":  return install.start(msg.payload);
+    case "wifi.scan":        return wifi.scan();
+    case "wifi.connect":     return wifi.connect(msg.payload);
+    case "disk.list":        return disk.list();
+    case "disk.partition":   return disk.partition(msg.payload);
+    case "install.start":    return install.start(msg.payload);
+    case "update.run":       return update.run();
+    case "update.list":      return update.list();
+    case "update.snapshot":  return update.snapshot(msg.payload.name);
+    case "update.rollback":  return update.rollback(msg.payload.name);
     default:
       throw new Error(`hollow-orc: unknown action: ${msg.action}`);
   }
