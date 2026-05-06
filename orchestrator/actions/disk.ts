@@ -15,13 +15,33 @@ export const disk = {
 
   async partition(payload: { device: string }): Promise<void> {
     const { device } = payload;
-    // EFI partition 512MB, rest is root
+
+    // Partition table
     await $`parted -s ${device} mklabel gpt`.quiet();
     await $`parted -s ${device} mkpart ESP fat32 1MiB 513MiB`.quiet();
     await $`parted -s ${device} set 1 esp on`.quiet();
-    await $`parted -s ${device} mkpart primary ext4 513MiB 100%`.quiet();
-    // Format
+    await $`parted -s ${device} mkpart primary 513MiB 100%`.quiet();
+
+    // Format EFI
     await $`mkfs.fat -F32 ${device}1`.quiet();
-    await $`mkfs.ext4 ${device}2`.quiet();
+
+    // Format root as Btrfs
+    await $`mkfs.btrfs -f ${device}2`.quiet();
+
+    // Mount and create subvolumes
+    await $`mount ${device}2 /mnt`.quiet();
+    await $`btrfs subvolume create /mnt/@`.quiet();
+    await $`btrfs subvolume create /mnt/@home`.quiet();
+    await $`btrfs subvolume create /mnt/@snapshots`.quiet();
+    await $`umount /mnt`.quiet();
+
+    // Remount with subvolumes
+    await $`mount -o subvol=@,compress=zstd /mnt`.quiet();
+    await $`mkdir -p /mnt/home`.quiet();
+    await $`mkdir -p /mnt/.snapshots`.quiet();
+    await $`mkdir -p /mnt/boot/efi`.quiet();
+    await $`mount -o subvol=@home,compress=zstd ${device}2 /mnt/home`.quiet();
+    await $`mount -o subvol=@snapshots,compress=zstd ${device}2 /mnt/.snapshots`.quiet();
+    await $`mount ${device}1 /mnt/boot/efi`.quiet();
   },
 };
