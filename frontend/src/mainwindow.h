@@ -2,6 +2,7 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 #include "orchestrator.h"
+#include "desktoppage.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -12,6 +13,10 @@ public:
 private:
     QStackedWidget *m_stack;
     Orchestrator *m_orc;
+    DesktopPage *m_desktopPage;
+    QString m_selectedDisk;
+    QString m_username;
+    QString m_password;
 
     QWidget *buildWelcomePage();
     QWidget *buildWifiPage();
@@ -20,4 +25,5 @@ private:
     QWidget *buildInstallPage();
 
     void nextPage();
+    void startInstall();
 };
