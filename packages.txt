@@ -1,0 +1,50 @@
+# Hollow OS - Base Package List
+# Drivers
+linux-firmware
+mesa
+mesa-dri
+vulkan-loader
+xf86-video-intel
+xf86-video-amdgpu
+nvidia
+v4l2loopback
+
+# Audio
+pipewire
+pipewire-pulse
+wireplumber
+alsa-utils
+
+# Networking
+NetworkManager
+network-manager-applet
+wpa_supplicant
+iwd
+
+# Bluetooth
+bluez
+blueman
+
+# Printing
+cups
+cups-filters
+
+# Desktop - KDE
+kde5
+kde5-baseapps
+plasma-desktop
+plasma-workspace
+sddm
+discover
+
+# Fonts
+noto-fonts-ttf
+noto-fonts-emoji
+
+# Utilities
+git
+nano
+curl
+wget
+htop
+firefox
